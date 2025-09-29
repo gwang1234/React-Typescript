@@ -271,3 +271,201 @@ let intersection1: Intersection = {
   language: "",
 };
 ```
+
+<br><br>
+
+### 타입 추론
+
+- TypeScript는 **점진적 타입 추론** 을 지원
+  - 타입을 명시하지 않아도 **초기값으로 자동으로 추론하여 타입을 부여**한다.
+  - 단, 함수 매개변수는 예외로 반드시 타입을 지정해야 한다.
+
+<br>
+
+```ts
+let d;
+
+d = 10; // number로 추론됨
+d.toFixed();
+
+d = "hello"; // string으로 추론됨
+d.toUpperCase();
+```
+
+- 초기값이 생략되면 암묵적인 any 타입으로 추론된다.
+  - any 타입 진화: 암묵적 any타입으로 추론되면 타입이 계속 진화할 수 있다.
+  - 때문에 가능한 any타입 진화는 쓰지 말자
+
+<br>
+
+```ts
+const num = 10; // number literal 타입으로 추론
+const str = "hello"; // string literal
+```
+
+- const로 지정되면 literal 타입으로 추론된다.
+- const가 아니면 범용적으로 사용할 수 있도록 **타입 넓히기**를 한다
+  - 타입 넓히기: 특정 값을 더 일반적이고 넓은 범위의 타입으로 추론하는 과정
+
+<br><br>
+
+### 타입 단언
+
+```ts
+type Person = {
+  name: string;
+  age: number;
+};
+
+let person = {} as Person;
+person.name = "김민정";
+person.age = 27;
+```
+
+- 초기화 값의 타입을 지정해주는 방법이다.
+- 초기화 값 뒤에 as + 타입명을 붙여줘서 초기화 값의 타입을 직접 단언한다.
+
+<br>
+
+```ts
+type Dog = {
+  name: string;
+  color: string;
+};
+
+let dog = {
+  name: "돌돌이",
+  color: "brown",
+  breed: "진도",
+} as Dog;
+```
+
+- 초기화 시 초과 프로퍼티 검사로 인한 에러를 막기 위해 타입 단언을 활용할 수도 있다. - 이때 변수 뒤에 붙여뒀던 타입 주석을 제거해도 제대로 타입을 추론해준다.
+
+<br>
+
+타입 단언의 규칙
+
+- 값 as 단언 <- 단언식
+- A as B
+- A가 B의 슈퍼타입이거나
+- A가 B의 서브타입이어야 함
+
+```ts
+let num1 = 10 as never;
+let num2 = 10 as unknown;
+let num3 = 10 as string; // 교집합 X, 오류
+let num3 = 10 as string as unknown as string; // 가능, 사용금지
+```
+
+<br>
+
+const 단언
+
+```ts
+let num4 = 10 as const; // number literal type
+
+let cat = {
+  name: "야옹",
+  color: "yellow",
+} as const; // 객체의 모든 프로퍼티가 readonly 읽기 전용 프로퍼티로 추론됨
+```
+
+- 변수를 const로 선언한 것과 동일한 효과를 만들어주는 단언
+
+<br>
+
+Not Null 단언
+
+```ts
+type Post = {
+  title: string;
+  author?: string; // 선택적 프로퍼티
+};
+
+let post: Post = {
+  title: "post1",
+  author: "홍길동",
+};
+
+const len: number = post.author!.length;
+```
+
+- 어느 값이 null 혹은 undefined가 아니라고 알려주는 단언
+- `!` 연산자를 활용
+
+<br><br>
+
+### 타입 좁히기
+
+```ts
+type Person = {
+  name: string;
+  age: number;
+};
+
+function func(value: number | string | Date | Person) {
+  if (typeof value === "number") {
+    console.log(value.toFixed());
+  } else if (typeof value === "string") {
+    console.log(value.toUpperCase());
+  } else if (value instanceof Date) {
+    console.log(value.getTime());
+  } else if (value && "age" in value) {
+    console.log(value.age);
+  }
+}
+```
+
+- 조건문 등을 이용해 넓은타입에서 좁은타입으로
+- 타입을 상황에 따라 좁히는 방법을 이야기
+- 이때 타입 좁히기를 도와주는 도구들을 **타입 가드**라고 한다
+  - `typeof`
+  - `A instanceof B` : A라는 값이 B객체(클래스)인가
+  - `in` : 클래스 객체가 아닌 특정한 타입 객체인지 검사하고 싶다면 프로퍼티 검사
+
+<br><br>
+
+### 서로소 유니온 타입
+
+- 교집합이 없는 타입들로만 만든 유니온 타입들 말함
+  - ex. number과 string 타입
+
+```ts
+type Admin = {
+  tag: "ADMIN";
+  name: string;
+  kickCount: number;
+};
+
+type Member = {
+  tag: "MEMBER";
+  name: string;
+  point: number;
+};
+
+type Guest = {
+  tag: "GUEST";
+  name: string;
+  visitCount: number;
+};
+
+type User = Admin | Member | Guest;
+
+function login(user: User) {
+  switch (user.tag) {
+    case "ADMIN":
+      console.log(`${user.kickCount}명 강퇴`);
+      break;
+    case "MEMBER":
+      console.log(`${user.point} 모음`);
+      break;
+    case "GUEST": {
+      console.log(`${user.visitCount}번 방문`);
+      break;
+    }
+  }
+}
+```
+
+- Admin, Member, Guest 타입에 tag 프로퍼티가 string literal로 정의되어 있어서 세 타입은 모두 서로소 집합
