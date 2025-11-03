@@ -31,7 +31,8 @@ function App() {
       {/* <Bulb/>
       <Counter /> */}
 
-      <Register/>
+      {/* <Register/> */}
+      <RegisterRef/>
     </>
   )
 }
