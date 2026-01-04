@@ -1,16 +1,16 @@
-# React + Vite
+# 라이프사이클
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> 라이프사이클: 생애주기
 
-Currently, two official plugins are available:
+<br>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```
+Mount -> Update -> UnMount
+```
+- Mount: 컴포넌트가 화면에 처음 렌더링 되는 순간
+- Update: 컴포넌트가 리렌더링
+- UnMount: 컴포넌트가 화면에서 사라지는 순간
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### useEffect
+- 리액트 컴포넌트의 사이드 이펙트를 제어하는 새로운 React Hook
+- 컴포넌트의 동작에 따라 파생되는 여러 효과
