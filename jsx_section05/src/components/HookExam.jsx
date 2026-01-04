@@ -1,0 +1,19 @@
+import useInput from "../hooks/useInput";
+
+// 3가지 hook 관련된 팁
+// 1. 함수 컴포넌트, 커스텀 내부 훅 컴포넌트에서만 사용 가능
+// 2. 조건부(if, for)로 호출될 수는 없다
+// 3. 나만의 훅(Custom Hook) 직접 만들 수 있다
+
+const HookExam = () => {
+    const [input, onChange] = useInput();
+
+    return (
+        <div>
+            <input value={input} onChange={onChange}/>
+        </div>
+        )
+
+}
+
+export default HookExam;

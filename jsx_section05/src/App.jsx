@@ -8,6 +8,7 @@ import Main from './components/Main.jsx'
 import { useState } from 'react'
 import Register from './components/Register.jsx'
 import RegisterRef from './components/RegisterRef.jsx'
+import HookExam from './components/HookExam.jsx'
 
 
 function App() {
@@ -33,7 +34,12 @@ function App() {
       <Counter /> */}
 
       {/* <Register/> */}
-      <RegisterRef/>
+
+      {/* Ref 예시 */}
+      {/* <RegisterRef/> */}
+
+      {/* 커스텀 훅 예시 */}
+      <HookExam/>
     </>
   )
 }
